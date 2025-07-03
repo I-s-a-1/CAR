@@ -114,19 +114,19 @@ void Rfid()
 void Bluetooth(char BT)
 {
   switch (BT) {
-    case 'F':  // 前進
+    case 'F':  //前進
       digitalWrite(IN5, LOW);
       digitalWrite(IN6, HIGH);
       break;
-    case 'B':  // 後退
+    case 'B':  //後退
       digitalWrite(IN5, HIGH);
       digitalWrite(IN6, LOW);
       break;
-    case 'S':  // 停止前後馬達
+    case 'S':  //停止前進或後退
       digitalWrite(IN5, LOW);
       digitalWrite(IN6, LOW);
       break;
-    case 'L':  // 左轉步進馬達
+    case 'L':  //左轉
       if (!Left) {
         stepper.moveTo(-341);
         while (stepper.distanceToGo() != 0) {
@@ -136,7 +136,7 @@ void Bluetooth(char BT)
         Right = true;
       }
       break;
-    case 'R':  // 右轉步進馬達
+    case 'R':  //右轉
       if (!Right) {
         stepper.moveTo(341);
         while (stepper.distanceToGo() != 0) {
@@ -146,7 +146,7 @@ void Bluetooth(char BT)
         Right = true;
       }
       break;
-    case 'M':  // 回到中心位置
+    case 'M':  //回到中心
       stepper.moveTo(0);
       while (stepper.distanceToGo() != 0) {
         stepper.run();
