@@ -31,18 +31,18 @@ bool Right = false;           //判斷是否已右轉
 MFRC522 rfid(SDA_PIN,RST_PIN);
 byte MyID[4] = {0x8C,0x10,0x1A,0x23};        //卡片ID
 byte readID[4];                              //存放讀取到的卡片ID
-bool Lock = true;                            //鎖定
+bool Lock = true;                            //鎖定狀態
 
 void setup() 
 {
-  //Serial.begin(9600);         //視窗監控
+  //Serial.begin(9600);         //視窗
   //搖桿
-  pinMode(zPin,INPUT_PULLUP);   //按鈕輸入有提昇電阻
+  pinMode(zPin,INPUT_PULLUP);   //按鈕數位輸入有提昇電阻
   //步進
   stepper.setMaxSpeed(1000);            //最大速度 (步/秒)
   stepper.setAcceleration(500);         //加速度 (步/秒^2)
   stepper.setCurrentPosition(0);        //位置設為中心
-  stepper.moveTo(0);                    //移動到起始位置(0°)
+  stepper.moveTo(0);                    //移動到起始位置(0)
   while(stepper.distanceToGo()!=0)
     stepper.run();
   //TT
@@ -61,7 +61,7 @@ void setup()
 void loop() 
 {
   Rfid();
-  //解鎖時執行動作
+  //解鎖狀態時執行動作
   if(!Lock) {
     Action();
   }
@@ -147,18 +147,18 @@ void Action()
     Left=true;                //zval==0才可以再次觸發左轉或右轉
     Right=true;               //zval==0才可以再次觸發左轉或右轉
   }
-  if(zval==0) {               
-    stepper.moveTo(0);        //重設到中心(0°)
+  if(zval==0) {               //中心重置
+    stepper.moveTo(0);        //重設到中心位置(0°)
     while(stepper.distanceToGo()!=0) {
       stepper.run();
     }
-    Left = false;           //重置左轉
-    Right = false;          //重置右轉
+    Left = false;           //重置左轉標誌
+    Right = false;          //重置右轉標誌
   }
 
   /*char buf[100];
   sprintf(buf, "X=%d, Y=%d, Z=%d", xval, yval, zval);
-  Serial.println(buf);      //查看搖桿位置
+  Serial.println(buf);
   delay(100);               //短暫延遲*/ 
 }
 //停止動作函式
@@ -166,7 +166,7 @@ void stopActions()
 {
   digitalWrite(IN5,LOW);
   digitalWrite(IN6,LOW);
-  stepper.moveTo(0);          //回到中心
+  stepper.moveTo(0);          //步進馬達回歸中心
   while(stepper.distanceToGo()!=0) {
     stepper.run();
   }
